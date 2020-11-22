@@ -16,6 +16,17 @@ variables:
   modulePath: '$(GOPATH)/src/github.com/$(build.repository.name)' # Path to the module's code
 
 steps:
+- task: Go@0
+  inputs:
+    command: 'build'
+    workingDirectory: '$(System.DefaultWorkingDirectory)'
+    
+- task: Go@0
+  inputs:
+    command: 'test'
+    arguments: '-v'
+    workingDirectory: '$(modulePath)'
+
 - script: |
     mkdir -p '$(GOBIN)'
     mkdir -p '$(GOPATH)/pkg'
@@ -26,6 +37,7 @@ steps:
     echo '##vso[task.prependpath]$(GOBIN)'
     echo '##vso[task.prependpath]$(GOROOT)/bin'
   displayName: 'Set up the Go workspace'
+
 
 - script: |
     go version
